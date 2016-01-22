@@ -1,11 +1,8 @@
-package com.ilkun.autocomplete.test;
+package com.ilkun.autocomplete;
 
-import com.ilkun.autocomplete.PrefixMatches;
-import com.ilkun.autocomplete.Trie;
-import com.ilkun.autocomplete.Tuple;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import com.ilkun.autocomplete.util.Tuple;
+import com.ilkun.autocomplete.trie.Trie;
+import org.junit.Ignore;
 import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +47,7 @@ public class PrefixMatchesTest {
         verify(trieMock).size();
     }
 
+    @Ignore
     @Test
     public void wordsWithPrefixTest() {
         pm.wordsWithPrefix("test");

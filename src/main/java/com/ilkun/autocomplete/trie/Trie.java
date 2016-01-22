@@ -1,4 +1,6 @@
-package com.ilkun.autocomplete;
+package com.ilkun.autocomplete.trie;
+
+import com.ilkun.autocomplete.util.Tuple;
 
 public interface Trie<T> {
 

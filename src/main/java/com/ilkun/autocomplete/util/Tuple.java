@@ -1,4 +1,4 @@
-package com.ilkun.autocomplete;
+package com.ilkun.autocomplete.util;
 
 public class Tuple<T> {
     

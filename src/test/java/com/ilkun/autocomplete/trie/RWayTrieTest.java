@@ -1,8 +1,9 @@
-package com.ilkun.autocomplete.test;
+package com.ilkun.autocomplete.trie;
 
-import com.ilkun.autocomplete.RWayTrie;
-import com.ilkun.autocomplete.Trie;
-import com.ilkun.autocomplete.Tuple;
+import com.ilkun.autocomplete.PrefixMatchesTest;
+import com.ilkun.autocomplete.util.Tuple;
+import com.ilkun.autocomplete.trie.Trie;
+import com.ilkun.autocomplete.trie.RWayTrie;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;

@@ -1,7 +1,8 @@
-package com.ilkun.autocomplete;
+package com.ilkun.autocomplete.trie;
 
+import com.ilkun.autocomplete.util.Tuple;
+import java.util.ArrayDeque;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
@@ -47,9 +48,9 @@ public class RWayTrie<T> implements Trie<T> {
             public Iterator<String> iterator() {
                 return new Iterator<String>() {
 
-                    Queue<Tuple<Node<T>>> pairs = new LinkedList<>();
-                    Queue<String> words = new LinkedList<>();
-                    Queue<Node<T>> nodes = new LinkedList<>();
+                    Queue<Tuple<Node<T>>> pairs = new ArrayDeque<>();
+                    Queue<String> words = new ArrayDeque<>();
+                    Queue<Node<T>> nodes = new ArrayDeque<>();
                     String last;
 
                     {
@@ -61,9 +62,11 @@ public class RWayTrie<T> implements Trie<T> {
 
                     @Override
                     public boolean hasNext() {
-                        if (last != null) {
-                            return true;
-                        }
+                        return !pairs.isEmpty();
+                    }
+
+                    @Override
+                    public String next() {
                         while (!pairs.isEmpty()) {
                             String curWord = pairs.element().getTerm();
                             Node<T> curNode = pairs.remove().getWeight();
@@ -74,23 +77,11 @@ public class RWayTrie<T> implements Trie<T> {
                                 }
                             }
                             if (curNode.value != null) {
-                                last = curWord;
-                                return true;
+                                return curWord;
                             }
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public String next() {
-                        if (hasNext()) {
-                            String next = last;
-                            last = null;
-                            return next;
                         }
                         throw new NoSuchElementException();
                     }
-
                 };
             }
         };

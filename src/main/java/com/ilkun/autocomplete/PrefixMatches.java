@@ -1,12 +1,17 @@
 package com.ilkun.autocomplete;
 
+import com.ilkun.autocomplete.util.Tuple;
+import com.ilkun.autocomplete.trie.Trie;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class PrefixMatches {
 
+    private static final int DEFAULT_NUM_OF_SEQ = 3;
+    private static final int MIN_PREF_LENGTH = 2;
+    private static final int MIN_K = 1;
     private final Trie trie;
-
+    
     public PrefixMatches(Trie trie) {
         this.trie = trie;
     }
@@ -55,31 +60,74 @@ public class PrefixMatches {
     // - при k=2 возвращаются 'abc', 'abcd', 'abce'
     // - при k=3 возвращаются 'abc', 'abcd', 'abce', 'abcde'
     // - при k=4 возвращаются 'abc', 'abcd', 'abce', 'abcde', 'abcdef'
-    public Iterable<String> wordsWithPrefix(String pref, int k) {
-        LinkedList<String> result = new LinkedList<>();
-        Iterator<String> it = trie.wordsWithPrefix(pref).iterator();
-        int lastLength = 0;
-        if (k >= 1 && pref.length() >= 2) {
-            while (it.hasNext()) {
-                String curWord = it.next();
-                if (curWord.length() > lastLength) {
-                    lastLength = curWord.length();
-                    k--;
-                }
-                if (k < 0) {
-                    break;
-                }
-                result.addLast(curWord);
-            }
-        }
+    public Iterable<String> wordsWithPrefix(final String pref, final int k) {
+        return new Iterable<String>() {
 
-        return result;
+            @Override
+            public Iterator<String> iterator() {
+                return new Iterator<String>() {
+
+                    Iterator<String> it;
+                    String next;
+                    int changes = 1;
+
+                    {
+                        if (pref.length() < MIN_PREF_LENGTH || k < MIN_K) {
+                            it = new Iterator<String>() {
+
+                                @Override
+                                public boolean hasNext() {
+                                    return false;
+                                }
+
+                                @Override
+                                public String next() {
+                                    throw new NoSuchElementException();
+                                }
+
+                            };
+                        } else {
+                            it = trie.wordsWithPrefix(pref).iterator();
+                            if (it.hasNext()) {
+                                next = it.next();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public boolean hasNext() {
+                        return next != null;
+                    }
+
+                    @Override
+                    public String next() {
+                        if (next == null) {
+                            throw new NoSuchElementException();
+                        }
+                        String current = next;
+                        if (it.hasNext()) {
+                            next = it.next();
+                            if (next.length() > current.length()) {
+                                changes++;
+                                if (changes > k) {
+                                    next = null;
+                                }
+                            }
+                        } else {
+                            next = null;
+                        }
+                        return current;
+                    }
+                };
+            }
+        };
+
     }
 
     // если введенный pref длиннее или равен 2м символам, то возвращает набор
     // слов k=3 разных длин начиная с минимальной, и начинающихся с данного 
     // префикса pref.
     public Iterable<String> wordsWithPrefix(String pref) {
-        return wordsWithPrefix(pref, 3);
+        return wordsWithPrefix(pref, DEFAULT_NUM_OF_SEQ);
     }
 }
