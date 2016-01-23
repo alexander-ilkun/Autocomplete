@@ -1,57 +1,85 @@
 package com.ilkun.autocomplete;
 
-import com.ilkun.autocomplete.util.Tuple;
-import com.ilkun.autocomplete.trie.Trie;
-import org.junit.Ignore;
-import static org.mockito.Mockito.*;
+import com.ilkun.autocomplete.trie.RWayTrie;
+import java.util.Iterator;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class PrefixMatchesTest {
-    
-    @Mock
-    Trie trieMock;
-    
-    @InjectMocks
-    PrefixMatches pm;
     
     @Test
     public void addTest() {
-        pm.add(new String[]{"test1", "test2"});
+        PrefixMatches pm = new PrefixMatches(new RWayTrie());
+        int expectedSize = 2;
+        
+        pm.add(new String[]{"testa", "testb"});
     
-        verify(trieMock, atLeastOnce()).add(any(Tuple.class));
+        assertEquals(expectedSize, pm.size());
     }
 
     @Test
     public void deleteTest() {
+        PrefixMatches pm = new PrefixMatches(new RWayTrie());
+        int expectedSize = 0;
+        
+        pm.add(new String[]{"test"});
         pm.delete("test");
     
-        verify(trieMock).delete(any(String.class));
+        assertEquals(expectedSize, pm.size());
     }
 
     @Test
     public void containsTest() {
-        pm.contains("test");
+        PrefixMatches pm = new PrefixMatches(new RWayTrie());
+        String[] strings = new String[]{"test"};
+        
+        pm.add(strings);
     
-        verify(trieMock).contains(any(String.class));
+        assertTrue(pm.contains("test"));
     }
 
     @Test
     public void sizeTest() {
-        pm.size();
-    
-        verify(trieMock).size();
+        PrefixMatches pm = new PrefixMatches(new RWayTrie());
+        int expectedSize = 0;
+        
+        assertEquals(expectedSize, pm.size());
     }
 
-    @Ignore
     @Test
     public void wordsWithPrefixTest() {
-        pm.wordsWithPrefix("test");
+        PrefixMatches pm = new PrefixMatches(new RWayTrie());
+        String[] strings = new String[]{"testa", "testb"};
+        int expectedCount = 2;
+        int actualCount = 0;
+        Iterator<String> it;
+        
+        pm.add(strings);
+        it = pm.wordsWithPrefix("test").iterator();
+        while (it.hasNext()) {
+            it.next();
+            actualCount++;
+        }
     
-        verify(trieMock, times(1)).wordsWithPrefix("test");
+        assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    public void wordsWithPrefixAndKTest() {
+        PrefixMatches pm = new PrefixMatches(new RWayTrie());
+        String[] strings = new String[]{"abc", "abcd", 
+            "abce", "abcde", "abcdef"};
+        int expectedCount = 3;
+        int actualCount = 0;
+        Iterator<String> it;
+        
+        pm.add(strings);
+        it = pm.wordsWithPrefix("abc", 2).iterator();
+        while (it.hasNext()) {
+            it.next();
+            actualCount++;
+        }
+    
+        assertEquals(expectedCount, actualCount);
     }
 }

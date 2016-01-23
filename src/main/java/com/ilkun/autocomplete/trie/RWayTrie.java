@@ -49,9 +49,6 @@ public class RWayTrie<T> implements Trie<T> {
                 return new Iterator<String>() {
 
                     Queue<Tuple<Node<T>>> pairs = new ArrayDeque<>();
-                    Queue<String> words = new ArrayDeque<>();
-                    Queue<Node<T>> nodes = new ArrayDeque<>();
-                    String last;
 
                     {
                         Node<T> prefNode = get(root, pref, 0);
@@ -70,10 +67,10 @@ public class RWayTrie<T> implements Trie<T> {
                         while (!pairs.isEmpty()) {
                             String curWord = pairs.element().getTerm();
                             Node<T> curNode = pairs.remove().getWeight();
-                            for (char c = 0; c < DIMENSION; c++) {
-                                if (curNode.next[c] != null) {
-                                    pairs.add(new Tuple<>(curWord + toLetter(c),
-                                            curNode.next[c]));
+                            for (char ch = 0; ch < DIMENSION; ch++) {
+                                if (curNode.next[ch] != null) {
+                                    pairs.add(new Tuple<>(curWord + toLetter(ch),
+                                            curNode.next[ch]));
                                 }
                             }
                             if (curNode.value != null) {
@@ -92,7 +89,7 @@ public class RWayTrie<T> implements Trie<T> {
         return size;
     }
 
-    private Node<T> add(Node<T> curNode, String word, T value, int depth) { // Change value associated with key if in subtrie rooted at x.
+    private Node<T> add(Node<T> curNode, String word, T value, int depth) {
         if (curNode == null) {
             curNode = new Node();
         }
@@ -103,7 +100,7 @@ public class RWayTrie<T> implements Trie<T> {
             curNode.value = value;
             return curNode;
         }
-        int ch = toIndex(word.charAt(depth)); // Use dth key char to identify subtrie.
+        int ch = toIndex(word.charAt(depth));
         curNode.next[ch] = add(curNode.next[ch], word, value, depth + 1);
         return curNode;
     }
@@ -123,7 +120,7 @@ public class RWayTrie<T> implements Trie<T> {
         if (depth == word.length()) {
             return curNode;
         }
-        int ch = toIndex(word.charAt(depth)); // Use dth key char to identify subtrie.
+        int ch = toIndex(word.charAt(depth));
         return get(curNode.next[ch], word, depth + 1);
     }
 

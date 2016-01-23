@@ -17,5 +17,4 @@ public class Tuple<T> {
     public T getWeight() {
         return weight;
     }
-
 }
