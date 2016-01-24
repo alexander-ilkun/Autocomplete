@@ -72,21 +72,7 @@ public class PrefixMatches {
                     int changes = 1;
 
                     {
-                        if (pref.length() < MIN_PREF_LENGTH || k < MIN_K) {
-                            it = new Iterator<String>() {
-
-                                @Override
-                                public boolean hasNext() {
-                                    return false;
-                                }
-
-                                @Override
-                                public String next() {
-                                    throw new NoSuchElementException();
-                                }
-
-                            };
-                        } else {
+                        if (pref.length() >= MIN_PREF_LENGTH && k >= MIN_K) {
                             it = trie.wordsWithPrefix(pref).iterator();
                             if (it.hasNext()) {
                                 next = it.next();

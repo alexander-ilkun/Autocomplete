@@ -1,6 +1,5 @@
 package com.ilkun.autocomplete;
 
-import com.ilkun.autocomplete.PrefixMatches;
 import com.ilkun.autocomplete.util.Tuple;
 import com.ilkun.autocomplete.trie.Trie;
 import static org.mockito.Mockito.*;
@@ -27,6 +26,13 @@ public class PrefixMatchesRWayTrieTest {
     }
 
     @Test
+    public void addCallsSizeTwoTimesTest() {
+        pm.add(new String[]{"testa", "testb"});
+    
+        verify(trieMock, times(2)).size();
+    }
+    
+    @Test
     public void deleteTest() {
         pm.delete("test");
     
@@ -50,6 +56,13 @@ public class PrefixMatchesRWayTrieTest {
     @Test
     public void wordsWithPrefixTest() {
         pm.wordsWithPrefix("test").iterator();
+    
+        verify(trieMock, times(1)).wordsWithPrefix("test");
+    }
+
+    @Test
+    public void wordsWithPrefixAndKTest() {
+        pm.wordsWithPrefix("test", 4).iterator();
     
         verify(trieMock, times(1)).wordsWithPrefix("test");
     }

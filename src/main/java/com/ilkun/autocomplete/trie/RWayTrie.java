@@ -1,6 +1,7 @@
 package com.ilkun.autocomplete.trie;
 
 import com.ilkun.autocomplete.util.Tuple;
+import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -15,7 +16,7 @@ public class RWayTrie<T> implements Trie<T> {
     private static class Node<E> {
 
         E value;
-        Node<E>[] next = new Node[DIMENSION];
+        Node<E>[] next = (Node<E>[]) Array.newInstance(value.getClass(), DIMENSION);
     }
 
     @Override
