@@ -16,7 +16,7 @@ public class RWayTrie<T> implements Trie<T> {
     private static class Node<E> {
 
         E value;
-        Node<E>[] next = (Node<E>[]) Array.newInstance(value.getClass(), DIMENSION);
+        Node<E>[] next = (Node<E>[]) Array.newInstance(this.getClass(), DIMENSION);
     }
 
     @Override
